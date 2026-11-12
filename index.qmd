@@ -1,0 +1,59 @@
+---
+title: "Does Where a Car Was Built Predict Its Fuel Efficiency?"
+subtitle: "A Five-Sentence Paper"
+author: RJ Malik
+date: today
+abstract: "Using the classic auto mpg data, this paper tests whether a car's region of origin is associated with above-median fuel efficiency."
+format:
+  html:
+    toc: true
+execute:
+  echo: true
+jupyter: python3
+---
+
+## Introduction
+
+This paper asks whether a car's region of origin (USA, Europe, or Japan) is associated with whether it gets above-median fuel efficiency.
+
+## Literature Review
+
+Legend has it that 1970s engineers in Detroit, Stuttgart, and Nagoya kept secret logbooks arguing over who built the thriftiest engine; together those (entirely imaginary) logbooks suggest that geography matters, though none of them ever ran a statistical test.
+
+## Method
+
+```{python}
+import pandas as pd
+import numpy as np
+import seaborn as sns
+from scipy import stats
+
+df = sns.load_dataset("mpg").dropna()
+
+mpg_median = df["mpg"].median()
+df["high_mpg"] = np.where(df["mpg"] > mpg_median, "High", "Low")
+
+n = len(df)
+```
+
+Using `{python} f"{n}"` cars from the auto mpg dataset, each classified as high or low efficiency relative to the median of `{python} f"{mpg_median:.1f}"` mpg, a chi-square test of independence evaluates the null hypothesis that origin and efficiency are independent against the alternative that they are associated.
+
+## Results
+
+```{python}
+table = pd.crosstab(df["origin"], df["high_mpg"])
+
+x2, pval, degf, expected = stats.chi2_contingency(table)
+
+p_text = "p < .001" if pval < 0.001 else f"p = {pval:.3f}"
+
+pct_high = (pd.crosstab(df["origin"], df["high_mpg"], normalize="index")["High"] * 100)
+
+table
+```
+
+Origin and fuel efficiency were significantly associated, χ²(`{python} f"{degf}"`, N = `{python} f"{n}"`) = `{python} f"{x2:.2f}"`, `{python} p_text`, with `{python} f"{pct_high['japan']:.0f}"`% of Japanese cars, `{python} f"{pct_high['europe']:.0f}"`% of European cars, and `{python} f"{pct_high['usa']:.0f}"`% of American cars above the median.
+
+## Discussion
+
+These results suggest that region of origin is strongly tied to fuel efficiency in this period, though the binary split, the observational data, and the lack of controls for engine size or weight mean future research should test whether origin still matters once those factors are accounted for.
