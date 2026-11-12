@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Does Where a Car Was Built Predict Its Fuel Efficiency?",
+    "section": "",
+    "text": "This paper asks whether a car’s region of origin (USA, Europe, or Japan) is associated with whether it gets above-median fuel efficiency."
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Does Where a Car Was Built Predict Its Fuel Efficiency?",
+    "section": "",
+    "text": "This paper asks whether a car’s region of origin (USA, Europe, or Japan) is associated with whether it gets above-median fuel efficiency."
+  },
+  {
+    "objectID": "index.html#literature-review",
+    "href": "index.html#literature-review",
+    "title": "Does Where a Car Was Built Predict Its Fuel Efficiency?",
+    "section": "Literature Review",
+    "text": "Literature Review\nLegend has it that 1970s engineers in Detroit, Stuttgart, and Nagoya kept secret logbooks arguing over who built the thriftiest engine; together those (entirely imaginary) logbooks suggest that geography matters, though none of them ever ran a statistical test."
+  },
+  {
+    "objectID": "index.html#method",
+    "href": "index.html#method",
+    "title": "Does Where a Car Was Built Predict Its Fuel Efficiency?",
+    "section": "Method",
+    "text": "Method\n\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\nfrom scipy import stats\n\ndf = sns.load_dataset(\"mpg\").dropna()\n\nmpg_median = df[\"mpg\"].median()\ndf[\"high_mpg\"] = np.where(df[\"mpg\"] &gt; mpg_median, \"High\", \"Low\")\n\nn = len(df)\n\nUsing 392 cars from the auto mpg dataset, each classified as high or low efficiency relative to the median of 22.8 mpg, a chi-square test of independence evaluates the null hypothesis that origin and efficiency are independent against the alternative that they are associated."
+  },
+  {
+    "objectID": "index.html#results",
+    "href": "index.html#results",
+    "title": "Does Where a Car Was Built Predict Its Fuel Efficiency?",
+    "section": "Results",
+    "text": "Results\n\ntable = pd.crosstab(df[\"origin\"], df[\"high_mpg\"])\n\nx2, pval, degf, expected = stats.chi2_contingency(table)\n\np_text = \"p &lt; .001\" if pval &lt; 0.001 else f\"p = {pval:.3f}\"\n\npct_high = (pd.crosstab(df[\"origin\"], df[\"high_mpg\"], normalize=\"index\")[\"High\"] * 100)\n\ntable\n\n\n\n\n\n\n\nhigh_mpg\nHigh\nLow\n\n\norigin\n\n\n\n\n\n\neurope\n54\n14\n\n\njapan\n70\n9\n\n\nusa\n72\n173\n\n\n\n\n\n\n\nOrigin and fuel efficiency were significantly associated, χ²(2, N = 392) = 112.27, p &lt; .001, with 89% of Japanese cars, 79% of European cars, and 29% of American cars above the median."
+  },
+  {
+    "objectID": "index.html#discussion",
+    "href": "index.html#discussion",
+    "title": "Does Where a Car Was Built Predict Its Fuel Efficiency?",
+    "section": "Discussion",
+    "text": "Discussion\nThese results suggest that region of origin is strongly tied to fuel efficiency in this period, though the binary split, the observational data, and the lack of controls for engine size or weight mean future research should test whether origin still matters once those factors are accounted for."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  }
+]
